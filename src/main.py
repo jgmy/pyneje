@@ -1,30 +1,34 @@
-#!/usr/bin/python
-
-import serial
-import Image
-import ImageTk
 import tkFileDialog
+import ttk
 
+import ImageTk
+from PIL import Image
+
+import engraver
+
+print(engraver.getSerialPorts())
+
+exit(0)
 
 # configure the serial connections
 # the parameters differs on the device you are connecting to
-
 #variables
+
 version = "0.1 alfa"
 usb_port = "/dev/ttyUSB0"
-baund_rate = 57600
+baud_rate = 57600
 
-ser = serial.Serial(
-    port=usb_port,
-    baudrate=baund_rate,
-    parity=serial.PARITY_ODD,
-    stopbits=serial.STOPBITS_ONE,
-    bytesize=serial.EIGHTBITS
-)
+#ser = serial.Serial(
+#    port=usb_port,
+#    baudrate=baund_rate,
+#    parity=serial.PARITY_ODD,
+#    stopbits=serial.STOPBITS_ONE,
+#    bytesize=serial.EIGHTBITS
+#)
 
 #import  dummy image
-name_image = "default.png"
-im = Image.open(name_image)
+#name_image = "default.png"
+#im = Image.open(name_image)
 
 
 def about():
@@ -37,8 +41,9 @@ def about():
 
 
 def open_image():
-    im = tkFileDialog.askopenfile(parent=root,mode='rb',title='Choose a file')
-    input = open('im','r')
+    fileName = tkFileDialog.askopenfilename(parent=root, title='Choose a file')
+    im = Image.open(fileName).convert("1").resize((512,512))
+
     label_image.config = Label(image_tab, image=input)
     #print(im)
     #im = Image.open(name_image)
@@ -101,8 +106,6 @@ def send_image():
     label_info.config(text="Uploading to EEPROM. Done")
 
 
-convert_image()
-
 # Gui start here
 
 try:
@@ -113,8 +116,8 @@ except:
 root = Tk()
 root.title("pyNeje")
 
-#tabs
-import ttk
+#tabs"
+#import ttk
 notebook = ttk.Notebook(root)
 image_tab = ttk.Frame(notebook)
 jog_tab = ttk.Frame(notebook)
