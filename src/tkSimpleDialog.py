@@ -87,6 +87,7 @@ class Dialog(Toplevel):
         self.parent.focus_set()
         self.destroy()
 
+
     #
     # command hooks
 

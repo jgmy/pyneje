@@ -6,7 +6,7 @@ from PIL import Image
 
 import engraver
 
-print(engraver.getSerialPorts())
+print(engraver.get_serial_ports())
 
 exit(0)
 
