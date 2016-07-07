@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(
-    name='pyneje',
+    name='pyneje_old',
     version='0.01',
     packages=[''],
     url='',

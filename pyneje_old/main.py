@@ -4,7 +4,7 @@ import ttk
 import ImageTk
 from PIL import Image
 
-import engraver
+from hal import engraver
 
 print(engraver.get_serial_ports())
 
