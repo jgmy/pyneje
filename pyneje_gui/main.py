@@ -10,24 +10,26 @@ class GUI:
     def __init__(self, tk, port):
         self.engraver = port
         self.tk = tk
+        self.engraveImage = None
+        self.previewImage = None
 
         # Gui start here
         root = self.tk
-        root.title("pyNeje")
+        root.title("pyNeje/PyBeam")
 
         # tabs"
         # import ttk
         notebook = ttk.Notebook(root)
-        image_tab = ttk.Frame(notebook)
+        self.image_tab = ttk.Frame(notebook)
         jog_tab = ttk.Frame(notebook)
         prefs_tab = ttk.Frame(notebook)
-        notebook.add(image_tab, text='Image')
+        notebook.add(self.image_tab, text='Image')
         notebook.add(jog_tab, text='jog')
         notebook.add(prefs_tab, text='Prefs')
         notebook.pack()
 
         # frames
-        image_frame_button = ttk.Frame(image_tab)
+        image_frame_button = ttk.Frame(self.image_tab)
 
         # entrys
         # entry_usb_port = Entry(prefs_tab, textvariable=usb_port)
@@ -38,13 +40,14 @@ class GUI:
 
         # labels
         # image preview
-        im = PIL.Image.open("default.png").convert("1").resize((512, 512))
 
-        tk_image = ImageTk.PhotoImage(im)
+        im = PIL.Image.open("default.png").resize((512, 512)).convert("1")
 
-        label_image = ttk.Label(image_tab, image=tk_image)
+        self.previewImage = ImageTk.PhotoImage(im)
+
+        self.label_image = ttk.Label(self.image_tab, image=self.previewImage)
         # info
-        self.label_info = ttk.Label(root, text=(im.format, im.size, im.mode))
+        self.label_info = ttk.Label(root, text="Welcome to PyNeje/PyBeam")
         # entry_label
         serial_label = ttk.Label(prefs_tab, text="serial ")
         # speed_label
@@ -71,7 +74,7 @@ class GUI:
         image_frame_button.grid(row=1, column=0)
 
         # grid image_tab
-        label_image.grid(row=0, column=0)
+        self.label_image.grid(row=0, column=0)
 
         open_image_bt.grid(row=0, column=0)
         send_image_bt.grid(row=0, column=1)
@@ -106,68 +109,54 @@ class GUI:
         pass
 
     def update_status(self, value):
-        self.label_info.config(text=value)
+        self.label_info.configure(text=value)
 
     def about():
         about = about(root)
-        donation_img = PIL.Image.open(bitcoin - donation.png)
+        donation_img = PIL.Image.open(bitcoin-donation.png)
         about.title("pyNeje " + version)
         label_about = ttk.Label(about, image="donation_img")
         about.mainloop()
 
-    def open_image():
-        fileName = tkFileDialog.askopenfilename(parent=root, title='Choose a file')
-        im = PIL.Image.open(fileName).convert("1").resize((512, 512))
-
-        label_image.config = ttk.Label(image_tab, image=input)
-        # print(im)
-        # im = Image.open(name_image)
-
-    def convert_image():
-        im = PIL.Image.open(name_image).convert("1")
-        # im = Image.open(name_image)
-        im = im.resize((512, 512))
-        print((im.format, im.size, im.mode))
+    def open_image(self):
+        file_name = tkFileDialog.askopenfilename(parent=self.tk, title='Choose a file')
+        self.engraveImage = PIL.Image.open(file_name).resize((512, 512)).convert("1")
+        self.previewImage = ImageTk.PhotoImage(self.engraveImage)
+        self.label_image.configure(image=self.previewImage)
 
     def engrave_memory(self):
+        self.update_status("Engraving from EPROM...")
         # set 60 ms
-        ser.write("3c".decode("hex"))
+        self.engraver.adjust_burntime(60)
         # engrave
-        self.label_info.config(text="Engraving Memory...")
-        ser.write("f1".decode("hex"))
-        self.label_info.config(text="Engraving Memory done")
+        self.engraver.start()
 
     def engrave_pause(self):
-        self.engraver.pause()
         self.update_status("Pause")
+        self.engraver.pause()
 
     def engrave_preview(self):
-        self.engraver.preview()
         self.update_status("Visualizing preview")
+        self.engraver.preview()
 
     def reset(self):
-        self.engraver.reset()
         self.update_status("Reset")
+        self.engraver.reset()
 
     def move_home(self):
-        self.engraver.move_home()
         self.update_status("Move home")
+        self.engraver.move_home()
 
     def move_center(self):
-        self.engraver.move_center()
         self.update_status("Move center")
+        self.engraver.move_center()
 
-    def send_image():
-        a = 0
-        while a < 8:
-            a = a + 1
-            print(("Erase EEPROM 8/" + str(a)))
-            # erase eeprom
-            ser.write("fe".decode("hex"))
+    def send_image(self):
         # upload to eeprom
-        label_info.config(text="Uploading to EEPROM. please wait...")
-        ser.write(im.getdata())
-        label_info.config(text="Uploading to EEPROM. Done")
+        self.update_status("Uploading to EEPROM. please wait...")
+        from PIL.Image import FLIP_TOP_BOTTOM
+        self.engraver.load_image(self.engraveImage.transpose(FLIP_TOP_BOTTOM).getdata())
+        self.update_status("Uploading to EEPROM. Done")
 
     def run(self):
         # tk main loop
