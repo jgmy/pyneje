@@ -8,9 +8,13 @@ parity none
 0xf1 = start (Once issued incoming data will specify the position, data uses a modulus format.)
 0xf2 = pause  
 0xf4 = engraving preview (visualizes bounding box)
-0xf5 = go up --- On firmware 3.3.00 it is 0xf5 0x01
-0xf6 = go down --- On firmware 3.3.00 0xF5 0x02
-On firmware 3.3.0 and soft 3.3.5, 
+0xf5 = go up --- On firmware 3.2.0 it is 0xf5 0x01
+0xf6 = go down --- On firmware 3.3.0 it is 0xF5 0x02
+
+On firmware 3.2.0 and soft 3.3.5, 0xf6 is issued at start to test for a neje device. 
+According with my serial sniffer, the neje device returns 0x65 0x70 when it receives a 0xf6 at start, but
+in my tests with qbasic files I did not get a 0x65 0x70, but 0x20 or 0x0. Bad parity?
+
 0xf7 = go left --- On firmware 3.3.00 0xF5 0x03
 0xf8 = go right 0xF5 0x04
 0xf3 = go to top left corner
