@@ -8,13 +8,16 @@ parity none
 0xf1 = start (Once issued incoming data will specify the position, data uses a modulus format.)
 0xf2 = pause  
 0xf4 = engraving preview (visualizes bounding box)
-0xf5 = go up
-0xf6 = go down
-0xf7 = go left
-0xf8 = go right
-0xf3 = go to left corner
+0xf5 = go up --- On firmware 3.3.00 it is 0xf5 0x01
+0xf6 = go down --- On firmware 3.3.00 0xF5 0x02
+On firmware 3.3.0 and soft 3.3.5, 
+0xf7 = go left --- On firmware 3.3.00 0xF5 0x03
+0xf8 = go right 0xF5 0x04
+0xf3 = go to top left corner
 <time in hex default= 0x3c (60ms)> burn time 
 0xfa = set motor parameter <hex speed default = 0x23 (35ms)>
 0xfb = go to center 
 0xfc = fast backward <parameter 0x55> fast forward <parameter 0xaa> recarve <parameter 0x77> // Useful??? 
 0xfe x8 = erase + send picture <picture data bmp> (BMP specification BW; 512x512px)﻿
+(this means 0xfe 8 times).
+
